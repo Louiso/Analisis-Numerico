@@ -1,0 +1,46 @@
+import numpy as np
+from numpy import pi
+
+def Gauss(AB):
+	#Obtenemos las dimensiones de la matriz aumentada
+	(r,c) = AB.shape
+	n=r
+	#r = n
+	#c = n+1
+	for j in range(n-1): #para cada columna,excepto la ultima
+		for i in range(j+1,n):
+			#print("j : ",j,"=>",AB[j,j])
+			if AB[j,j] == 0 and j == n-2:
+				return "Es inconsistente"
+			elif AB[j,j] == 0:
+				k=j+1
+				#Si se verifica que AB[k,j] es el maximo posible en su columna entonces se 
+				#podria decir que se esta ejecutando Gauss con pivote
+				while AB[k,j]==0:
+					#print(AB[k,j])
+					if k==n-2:
+						return "Es inconsistente"
+					k = k + 1
+				temp = AB[k,:]
+				AB[k,:] = AB[j,:]
+				AB[j,:] = temp 
+			mij=AB[i,j]/AB[j,j]
+			AB[i,:] = AB[i,:] - mij*AB[j,:]
+	#print(AB)
+	x = np.zeros((n,1),dtype=float)
+	x[n-1]=AB[n-1,n]/AB[n-1,n-1]
+	for i in range(n-2,-1,-1):
+		x[i] = (AB[i,n] - np.sum(x[(i+1):n]*AB[i,i+1:n]))/AB[i,i]
+	return x
+
+AB = np.array([
+				[1,1,1,1,4],
+				[1,2,1,1,5],
+				[2,2,2,2,8],
+				[1,2,4,1,8]
+			])
+print("\n")
+print(AB)
+print("\n")
+x = Gauss(AB)
+print(x)	
